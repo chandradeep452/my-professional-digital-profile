@@ -4,19 +4,42 @@ import fs from 'fs';
 import { randomUUID } from 'crypto';
 import { Student, StudentSubmissionPayload, Skill, Project, Certificate } from '@/types';
 
-const dataDir = path.join(process.cwd(), 'data');
+// On Vercel Serverless / AWS Lambda, the filesystem is read-only except /tmp
+const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const dataDir = isServerless ? path.join('/tmp', 'data') : path.join(process.cwd(), 'data');
+
 if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
+  try {
+    fs.mkdirSync(dataDir, { recursive: true });
+  } catch (e) {
+    console.warn('Could not create data directory:', e);
+  }
 }
 
 const dbPath = path.join(dataDir, 'portfolio.db');
+
+// If running in serverless, copy bundled database to /tmp if present
+if (isServerless) {
+  const bundledDb = path.join(process.cwd(), 'data', 'portfolio.db');
+  if (fs.existsSync(bundledDb) && !fs.existsSync(dbPath)) {
+    try {
+      fs.copyFileSync(bundledDb, dbPath);
+    } catch (e) {
+      console.warn('Could not copy bundled DB to /tmp, will initialize fresh:', e);
+    }
+  }
+}
 
 let dbInstance: Database.Database | null = null;
 
 export function getDb(): Database.Database {
   if (!dbInstance) {
     dbInstance = new Database(dbPath);
-    dbInstance.pragma('journal_mode = WAL');
+    if (isServerless) {
+      dbInstance.pragma('journal_mode = MEMORY');
+    } else {
+      dbInstance.pragma('journal_mode = WAL');
+    }
     dbInstance.pragma('foreign_keys = ON');
     initTables(dbInstance);
   }

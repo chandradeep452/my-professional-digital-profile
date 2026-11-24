@@ -37,8 +37,11 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
     const subDir = type === 'resume' ? 'resumes' : 'certificates';
-    const uploadDir = path.join(process.cwd(), 'public', 'uploads', subDir);
+    const uploadDir = isServerless
+      ? path.join('/tmp', 'uploads', subDir)
+      : path.join(process.cwd(), 'public', 'uploads', subDir);
 
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
