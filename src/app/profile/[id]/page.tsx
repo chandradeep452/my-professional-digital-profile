@@ -4,8 +4,6 @@ import Link from 'next/link';
 import { getStudentById, getStudentByStudentId } from '@/lib/db';
 import { 
   GraduationCap, 
-  FileText, 
-  Download, 
   ExternalLink, 
   Globe, 
   Mail, 
@@ -14,10 +12,12 @@ import {
   ArrowLeft,
   ShieldCheck,
   Calendar,
-  CheckCircle,
   Briefcase
 } from 'lucide-react';
 import ProfileCertificateViewer from './ProfileCertificateViewer';
+import ProfileClientActions from './ProfileClientActions';
+
+export const dynamic = 'force-dynamic';
 
 function GithubIcon({ className = 'w-3.5 h-3.5' }: { className?: string }) {
   return (
@@ -34,8 +34,6 @@ function LinkedinIcon({ className = 'w-3.5 h-3.5' }: { className?: string }) {
     </svg>
   );
 }
-
-export const dynamic = 'force-dynamic';
 
 export default async function StudentProfilePage({
   params,
@@ -61,29 +59,31 @@ export default async function StudentProfilePage({
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 relative z-10">
       <div className="max-w-5xl mx-auto space-y-8">
         {/* Back Link */}
         <div>
           <Link
             href="/"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-indigo-600 transition"
+            className="inline-flex items-center gap-2 text-xs font-normal text-zinc-400 hover:text-white transition"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Recruiter Directory</span>
           </Link>
         </div>
 
-        {/* Profile Card Header */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="h-32 sm:h-36 bg-gradient-to-r from-indigo-700 via-indigo-600 to-indigo-800" />
-          
+        {/* Profile Card Header with Smoked Obsidian Banner */}
+        <div className="glass-panel rounded-3xl border border-white/12 shadow-2xl overflow-hidden relative">
+          <div className="h-36 sm:h-44 bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 relative overflow-hidden border-b border-white/10">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent" />
+          </div>
+
           <div className="px-6 sm:px-10 pb-8 pt-0 relative">
-            {/* Top row: Avatar overlaps banner; Action Buttons sit cleanly in the white section */}
+            {/* Top row: Avatar cleanly overlaps banner; Action Buttons sit cleanly below */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               {/* Avatar placeholder with Initials */}
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-white p-1.5 shadow-md border-4 border-white shrink-0 -mt-12 sm:-mt-14">
-                <div className="w-full h-full rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-700 font-extrabold text-2xl sm:text-3xl">
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-zinc-950 p-1.5 shadow-2xl border-4 border-zinc-950 shrink-0 -mt-12 sm:-mt-14">
+                <div className="w-full h-full rounded-2xl bg-gradient-to-tr from-zinc-800 to-zinc-600 flex items-center justify-center text-white font-medium text-2xl sm:text-3xl shadow-inner border border-white/20">
                   {student.fullName
                     .split(' ')
                     .map((n) => n[0])
@@ -93,76 +93,51 @@ export default async function StudentProfilePage({
                 </div>
               </div>
 
-              {/* Action Buttons: Resume Download & Contact - positioned with clean breathing space */}
-              <div className="flex flex-wrap items-center gap-3 pt-2 sm:pt-4">
-                {student.resumePath ? (
-                  <a
-                    href={student.resumePath}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    download
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-md hover:shadow transition"
-                  >
-                    <Download className="w-4 h-4" />
-                    <span>Download Resume (PDF)</span>
-                  </a>
-                ) : (
-                  <button
-                    disabled
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 text-slate-400 text-sm font-medium cursor-not-allowed"
-                  >
-                    <FileText className="w-4 h-4" />
-                    <span>Resume Not Uploaded</span>
-                  </button>
-                )}
-
-                <a
-                  href={`mailto:${student.institutionalEmail}?subject=Recruiter Inquiry: ${encodeURIComponent(student.fullName)}`}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold shadow-xs transition"
-                >
-                  <Mail className="w-4 h-4 text-indigo-600" />
-                  <span>Contact via Email</span>
-                </a>
-              </div>
+              {/* Action Buttons with Interactive Client Motion */}
+              <ProfileClientActions
+                resumePath={student.resumePath}
+                institutionalEmail={student.institutionalEmail}
+                fullName={student.fullName}
+              />
             </div>
 
             {/* Name, Student ID & Academics */}
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex flex-wrap items-center gap-3">
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                <h1 className="text-2xl sm:text-4xl font-medium text-white tracking-tight">
                   {student.fullName}
                 </h1>
-                <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                <span className="px-3 py-1 rounded-full text-xs font-normal bg-zinc-900 text-zinc-200 border border-white/15">
                   ID: {student.studentId}
                 </span>
-                <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="px-3 py-1 rounded-full text-xs font-medium bg-white/10 text-white border border-white/20">
                   CGPA {student.cgpa.toFixed(2)} / 10.0
                 </span>
               </div>
 
-              <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600 font-medium">
-                <div className="flex items-center gap-1.5">
-                  <GraduationCap className="w-4 h-4 text-indigo-600" />
+              <div className="flex flex-wrap items-center gap-4 text-sm text-zinc-300 font-normal">
+                <div className="flex items-center gap-2">
+                  <GraduationCap className="w-4 h-4 text-zinc-300" />
                   <span>
                     {student.degree} in {student.branch}
                   </span>
                 </div>
-                <span>•</span>
-                <div className="flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-slate-500" />
+                <span className="text-zinc-600">•</span>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-zinc-300" />
                   <span>Class of {student.graduationYear}</span>
                 </div>
               </div>
 
-              <p className="text-sm text-slate-700 leading-relaxed max-w-3xl pt-2">
+              <p className="text-sm text-zinc-300 font-normal leading-relaxed max-w-3xl pt-1">
                 {student.headlineBio}
               </p>
 
               {/* Social and Portfolio links */}
-              <div className="flex flex-wrap items-center gap-3 pt-3">
+              <div className="flex flex-wrap items-center gap-3 pt-2">
                 {student.institutionalEmail && (
-                  <span className="inline-flex items-center gap-1.5 text-xs text-slate-600 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
-                    <Mail className="w-3.5 h-3.5 text-indigo-500" />
+                  <span className="inline-flex items-center gap-2 text-xs font-normal text-zinc-200 bg-zinc-900 px-3.5 py-1.5 rounded-xl border border-white/15">
+                    <Mail className="w-3.5 h-3.5 text-zinc-300" />
                     <span>{student.institutionalEmail}</span>
                   </span>
                 )}
@@ -172,7 +147,7 @@ export default async function StudentProfilePage({
                     href={student.linkedinUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg border border-blue-200 transition"
+                    className="inline-flex items-center gap-1.5 text-xs font-normal text-zinc-100 bg-white/10 hover:bg-white/20 px-3.5 py-1.5 rounded-xl border border-white/15 transition shadow-xs"
                   >
                     <LinkedinIcon className="w-3.5 h-3.5" />
                     <span>LinkedIn</span>
@@ -185,7 +160,7 @@ export default async function StudentProfilePage({
                     href={student.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg border border-slate-300 transition"
+                    className="inline-flex items-center gap-1.5 text-xs font-normal text-zinc-100 bg-zinc-900 hover:bg-zinc-800 px-3.5 py-1.5 rounded-xl border border-white/15 transition shadow-xs"
                   >
                     <GithubIcon className="w-3.5 h-3.5" />
                     <span>GitHub</span>
@@ -198,7 +173,7 @@ export default async function StudentProfilePage({
                     href={student.portfolioUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg border border-indigo-200 transition"
+                    className="inline-flex items-center gap-1.5 text-xs font-normal text-zinc-100 bg-white/10 hover:bg-white/20 px-3.5 py-1.5 rounded-xl border border-white/15 transition shadow-xs"
                   >
                     <Globe className="w-3.5 h-3.5" />
                     <span>Portfolio</span>
@@ -210,35 +185,35 @@ export default async function StudentProfilePage({
           </div>
 
           {/* Privacy safe footer bar */}
-          <div className="px-6 sm:px-10 py-3 bg-slate-50 border-t border-slate-100 flex items-center gap-2 text-xs text-slate-500">
-            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+          <div className="px-6 sm:px-10 py-3.5 bg-black/75 border-t border-white/10 flex items-center gap-2.5 text-xs text-zinc-400 font-normal">
+            <ShieldCheck className="w-4 h-4 text-zinc-200 shrink-0" />
             <span>
-              <strong>Verified Profile:</strong> Student phone number and sensitive credentials withheld per privacy protection standards.
+              <span className="text-zinc-100 font-medium">Verified Profile:</span> Student phone number and sensitive credentials withheld per privacy protection standards.
             </span>
           </div>
         </div>
 
         {/* Section 1: Technical Skills Matrix */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 sm:p-8 space-y-4">
-          <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
-            <Code className="w-5 h-5 text-indigo-600" />
-            <h2 className="text-lg font-bold text-slate-900">Technical Skills Matrix</h2>
+        <div className="glass-panel rounded-3xl border border-white/12 p-6 sm:p-8 space-y-5">
+          <div className="flex items-center gap-2.5 border-b border-white/10 pb-4">
+            <Code className="w-5 h-5 text-zinc-200" />
+            <h2 className="text-lg font-medium text-white">Technical Skills Matrix</h2>
           </div>
 
           {Object.keys(skillsByCategory).length === 0 ? (
-            <p className="text-xs text-slate-400 italic">No specific skills listed.</p>
+            <p className="text-xs text-zinc-500 italic font-normal">No specific skills listed.</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {Object.entries(skillsByCategory).map(([category, items]) => (
-                <div key={category} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
-                  <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                <div key={category} className="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-2.5">
+                  <h3 className="text-xs font-normal text-zinc-400 uppercase tracking-wider">
                     {category}
                   </h3>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-2">
                     {items.map((skillName, i) => (
                       <span
                         key={i}
-                        className="px-2.5 py-1 rounded-lg text-xs font-medium bg-white text-slate-800 border border-slate-200 shadow-2xs"
+                        className="px-3 py-1 rounded-xl text-xs font-normal bg-zinc-900 text-zinc-200 border border-white/12 hover:border-white/30 transition"
                       >
                         {skillName}
                       </span>
@@ -251,24 +226,26 @@ export default async function StudentProfilePage({
         </div>
 
         {/* Section 2: Featured Projects */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 sm:p-8 space-y-4">
-          <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
-            <Briefcase className="w-5 h-5 text-indigo-600" />
-            <h2 className="text-lg font-bold text-slate-900">Featured Projects</h2>
+        <div className="glass-panel rounded-3xl border border-white/12 p-6 sm:p-8 space-y-5">
+          <div className="flex items-center gap-2.5 border-b border-white/10 pb-4">
+            <Briefcase className="w-5 h-5 text-zinc-200" />
+            <h2 className="text-lg font-medium text-white">Featured Projects</h2>
           </div>
 
           {(!student.projects || student.projects.length === 0) ? (
-            <p className="text-xs text-slate-400 italic">No projects added yet.</p>
+            <p className="text-xs text-zinc-500 italic font-normal">No projects added yet.</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {student.projects.map((proj) => (
                 <div
                   key={proj.id}
-                  className="p-5 rounded-2xl bg-slate-50/70 border border-slate-200 flex flex-col justify-between space-y-4 hover:border-indigo-300 transition"
+                  className="p-6 rounded-2xl bg-black/60 border border-white/10 flex flex-col justify-between space-y-4 hover:border-white/30 transition-all group"
                 >
-                  <div className="space-y-2">
-                    <h3 className="text-base font-bold text-slate-900">{proj.title}</h3>
-                    <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-line">
+                  <div className="space-y-2.5">
+                    <h3 className="text-base font-medium text-white group-hover:text-zinc-200 transition">
+                      {proj.title}
+                    </h3>
+                    <p className="text-xs text-zinc-300 font-normal leading-relaxed whitespace-pre-line">
                       {proj.description}
                     </p>
 
@@ -277,7 +254,7 @@ export default async function StudentProfilePage({
                         {proj.techStack.map((tech, tIdx) => (
                           <span
                             key={tIdx}
-                            className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100"
+                            className="px-2.5 py-0.5 rounded-md text-[11px] font-normal bg-white/10 text-zinc-200 border border-white/15"
                           >
                             {tech}
                           </span>
@@ -287,13 +264,13 @@ export default async function StudentProfilePage({
                   </div>
 
                   {/* Project Links */}
-                  <div className="flex items-center gap-3 pt-2 border-t border-slate-200/60">
+                  <div className="flex items-center gap-3 pt-3 border-t border-white/10">
                     {proj.githubUrl && (
                       <a
                         href={proj.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-indigo-600 transition"
+                        className="inline-flex items-center gap-1.5 text-xs font-normal text-zinc-300 hover:text-white transition"
                       >
                         <GithubIcon className="w-3.5 h-3.5" />
                         <span>Source Code</span>
@@ -305,7 +282,7 @@ export default async function StudentProfilePage({
                         href={proj.liveDemoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition"
+                        className="inline-flex items-center gap-1.5 text-xs font-normal text-zinc-200 hover:text-white transition"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
                         <span>Live Demo</span>
@@ -319,10 +296,10 @@ export default async function StudentProfilePage({
         </div>
 
         {/* Section 3: Verified Certificates Showcase */}
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-xs p-6 sm:p-8 space-y-4">
-          <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
-            <Award className="w-5 h-5 text-indigo-600" />
-            <h2 className="text-lg font-bold text-slate-900">Verified Certifications & Credentials</h2>
+        <div className="glass-panel rounded-3xl border border-white/12 p-6 sm:p-8 space-y-5">
+          <div className="flex items-center gap-2.5 border-b border-white/10 pb-4">
+            <Award className="w-5 h-5 text-zinc-200" />
+            <h2 className="text-lg font-medium text-white">Verified Certifications & Credentials</h2>
           </div>
 
           <ProfileCertificateViewer certificates={student.certificates || []} />

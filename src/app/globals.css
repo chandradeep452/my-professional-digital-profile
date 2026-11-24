@@ -2,8 +2,551 @@
 
 @layer base {
   body {
-    background-color: #f8fafc;
-    color: #0f172a;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #000000;
+    color: #f4f4f5;
+    font-family: var(--font-open-sans), 'Open Sans', Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    overflow-x: hidden;
+  }
+
+  strong, b {
+    font-weight: 500;
+  }
+}
+
+/* Custom Keyframe Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.78;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes borderGlow {
+  0%, 100% {
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+  50% {
+    border-color: rgba(255, 255, 255, 0.36);
+  }
+}
+
+/* Smoked Obsidian Glassmorphism — Harmonizes with Live Rain & Chrome Buttons */
+.glass-panel {
+  background: rgba(9, 9, 12, 0.84);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 36px -12px rgba(0, 0, 0, 0.9);
+}
+
+.glass-card {
+  background: rgba(10, 10, 13, 0.84);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  box-shadow: 0 10px 28px -10px rgba(0, 0, 0, 0.85);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  background: rgba(16, 16, 20, 0.92);
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 16px 38px -12px rgba(255, 255, 255, 0.08);
+  transform: translateY(-3px);
+}
+
+.shimmer-btn {
+  background: linear-gradient(90deg, #27272a 0%, #52525b 50%, #27272a 100%);
+  background-size: 200% auto;
+  transition: all 0.3s ease;
+}
+
+.shimmer-btn:hover {
+  background-position: right center;
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.2);
+  transform: scale(1.02);
+}
+
+/* Subtle Silver Ambient Glows */
+.ambient-glow-1 {
+  position: fixed;
+  top: -12%;
+  left: 18%;
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  animation: pulseGlow 8s ease-in-out infinite;
+}
+
+.ambient-glow-2 {
+  position: fixed;
+  bottom: 8%;
+  right: 14%;
+  width: 580px;
+  height: 580px;
+  background: radial-gradient(circle, rgba(212, 212, 216, 0.04) 0%, rgba(212, 212, 216, 0) 70%);
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+  animation: pulseGlow 10s ease-in-out infinite alternate;
+}
+
+/* Custom Smooth Smoked-Obsidian Scrollbar for Dropdowns */
+.sky-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sky-scrollbar::-webkit-scrollbar-track {
+  background: #09090b;
+  border-radius: 9999px;
+  margin: 6px 0;
+}
+
+.sky-scrollbar::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+  border-radius: 9999px;
+  transition: background 0.2s ease;
+}
+
+.sky-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #71717a;
+}
+
+.sky-scrollbar::-webkit-scrollbar-button {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .sky-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #3f3f46 #09090b;
+  }
+}
+
+/* Iridescent Liquid-Chrome Button (Uiverse.io by dexter-st) */
+.iridescent-btn-wrapper {
+  --rad: 32px;
+  --color-wrapper-border: #fff;
+  --color-btn-bg: #f00;
+  --color-btn-text: #000;
+  --color-btn-text-shadow: #fff;
+  --color-btn-inset-shadow: #558;
+  --color-layer-a: #fff;
+  --color-layer-b: #00f;
+  --color-overlay-text: #000;
+  --color-overlay-glow: #fff;
+  --color-overlay-shadow: #0004;
+  --color-overlay-highlight: #fff5;
+
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: clip;
+  overflow-clip-margin: 4px;
+  cursor: pointer;
+
+  border: 2px solid var(--color-wrapper-border);
+  border-radius: var(--rad);
+
+  font-family: inherit;
+  font-weight: 500;
+  filter: saturate(0.65) brightness(1.8);
+}
+
+.iridescent-btn-wrapper--sm {
+  font-size: 0.875rem;
+}
+
+.iridescent-btn-wrapper--md {
+  font-size: 1rem;
+}
+
+.iridescent-gradient-btn {
+  position: relative;
+  z-index: -1;
+  border: none;
+  border-radius: var(--rad);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: 0.08rem;
+  white-space: nowrap;
+
+  color: var(--color-btn-text);
+  background-color: var(--color-btn-bg);
+  background-size: 200% 200%;
+  box-shadow: inset 0 0 10px 9px var(--color-btn-inset-shadow);
+  text-shadow: 0 1px 3px var(--color-btn-text-shadow);
+
+  cursor: pointer;
+  mix-blend-mode: color-dodge;
+  transition:
+    color 0.3s ease,
+    text-shadow 0.3s ease;
+}
+
+.iridescent-btn-wrapper--sm .iridescent-gradient-btn,
+.iridescent-btn-wrapper--sm .iridescent-text-overlay {
+  padding: 8px 20px;
+}
+
+.iridescent-btn-wrapper--md .iridescent-gradient-btn,
+.iridescent-btn-wrapper--md .iridescent-text-overlay {
+  padding: 12px 30px;
+}
+
+.iridescent-gradient-btn::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--rad);
+  background-size: 200% 200%;
+  mix-blend-mode: difference;
+  z-index: 1;
+}
+
+.iridescent-gradient-layer {
+  position: absolute;
+  pointer-events: none;
+  left: -160px;
+  width: 500%;
+  aspect-ratio: 1;
+
+  background: radial-gradient(
+    ellipse at 65% 180%,
+    var(--color-layer-a),
+    var(--color-layer-b),
+    var(--color-layer-a),
+    var(--color-layer-b),
+    var(--color-layer-a),
+    var(--color-layer-b),
+    var(--color-layer-a),
+    var(--color-layer-b),
+    var(--color-layer-a),
+    var(--color-layer-b),
+    var(--color-layer-a)
+  );
+
+  mix-blend-mode: difference;
+  animation: iridescent-rotate 8s linear infinite;
+}
+
+.iridescent-gradient-layer:last-of-type {
+  mix-blend-mode: color-dodge;
+}
+
+@keyframes iridescent-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.iridescent-text-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 2;
+  border-radius: var(--rad);
+
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: 0.08rem;
+  white-space: nowrap;
+
+  color: var(--color-overlay-text);
+  text-shadow: 0 0 4px var(--color-overlay-glow);
+  box-shadow:
+    inset 0 -4px 4px 0 var(--color-overlay-shadow),
+    inset 0 4px 4px 0 var(--color-overlay-highlight);
+
+  mix-blend-mode: multiply;
+  transition: transform 0.3s ease;
+  animation: iridescent-opacity-pulse 5s ease infinite;
+}
+
+.iridescent-btn-wrapper:hover .iridescent-text-overlay {
+  transform: scale(1.08);
+}
+
+.iridescent-btn-wrapper:hover .iridescent-gradient-btn {
+  color: #0000;
+  text-shadow: 0 0 0 #0000;
+}
+
+.iridescent-btn-wrapper:active .iridescent-text-overlay {
+  transform: scale(0.95);
+}
+
+.iridescent-btn-wrapper:active .iridescent-gradient-btn {
+  color: #0000;
+  text-shadow: 0 0 0 #0000;
+}
+
+.iridescent-light {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 50px;
+  width: 80%;
+  height: 1.9rem;
+  aspect-ratio: 1;
+  background-color: #fff5;
+  filter: blur(5px);
+  animation: iridescent-pulse 3s ease-in-out infinite;
+}
+
+@keyframes iridescent-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.1;
+  }
+}
+
+@keyframes iridescent-opacity-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Animated CSS Rain Matrix Background (Uiverse.io by SelfMadeSystem) */
+.rain-bg-container {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  --c: #09f;
+  background-color: #000;
+  background-image: radial-gradient(4px 100px at 0px 235px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 235px, var(--c), #0000),
+    radial-gradient(1.5px 1.5px at 150px 117.5px, var(--c) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 252px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 252px, var(--c), #0000),
+    radial-gradient(1.5px 1.5px at 150px 126px, var(--c) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 150px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 150px, var(--c), #0000),
+    radial-gradient(1.5px 1.5px at 150px 75px, var(--c) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 253px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 253px, var(--c), #0000),
+    radial-gradient(1.5px 1.5px at 150px 126.5px, var(--c) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 204px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 204px, var(--c), #0000),
+    radial-gradient(1.5px 1.5px at 150px 102px, var(--c) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 134px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 134px, var(--c), #0000),
+    radial-gradient(1.5px 1.5px at 150px 67px, var(--c) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 179px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 179px, var(--c), #0000),
+    radial-gradient(1.5px 1.5px at 150px 89.5px, var(--c) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 299px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 299px, var(--c), #0000),
+    radial-gradient(1.5px 1.5px at 150px 149.5px, var(--c) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 215px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 215px, var(--c), #0000),
+    radial-gradient(1.5px 1.5px at 150px 107.5px, var(--c) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 281px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 281px, var(--c), #0000),
+    radial-gradient(1.5px 1.5px at 150px 140.5px, var(--c) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 158px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 158px, var(--c), #0000),
+    radial-gradient(1.5px 1.5px at 150px 79px, var(--c) 100%, #0000 150%),
+    radial-gradient(4px 100px at 0px 210px, var(--c), #0000),
+    radial-gradient(4px 100px at 300px 210px, var(--c), #0000),
+    radial-gradient(1.5px 1.5px at 150px 105px, var(--c) 100%, #0000 150%);
+  background-size:
+    300px 235px,
+    300px 235px,
+    300px 235px,
+    300px 252px,
+    300px 252px,
+    300px 252px,
+    300px 150px,
+    300px 150px,
+    300px 150px,
+    300px 253px,
+    300px 253px,
+    300px 253px,
+    300px 204px,
+    300px 204px,
+    300px 204px,
+    300px 134px,
+    300px 134px,
+    300px 134px,
+    300px 179px,
+    300px 179px,
+    300px 179px,
+    300px 299px,
+    300px 299px,
+    300px 299px,
+    300px 215px,
+    300px 215px,
+    300px 215px,
+    300px 281px,
+    300px 281px,
+    300px 281px,
+    300px 158px,
+    300px 158px,
+    300px 158px,
+    300px 210px,
+    300px 210px,
+    300px 210px;
+  animation: rain-fall 150s linear infinite;
+}
+
+.rain-bg-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image: radial-gradient(
+    circle at 50% 50%,
+    #0000 0,
+    #0000 2px,
+    hsl(0 0% 4%) 2px
+  );
+  background-size: 8px 8px;
+  --f: blur(1em) brightness(6);
+  animation: rain-hue 10s linear infinite;
+}
+
+@keyframes rain-hue {
+  0% {
+    backdrop-filter: var(--f) hue-rotate(0deg);
+  }
+  to {
+    backdrop-filter: var(--f) hue-rotate(360deg);
+  }
+}
+
+@keyframes rain-fall {
+  0% {
+    background-position:
+      0px 220px,
+      3px 220px,
+      151.5px 337.5px,
+      25px 24px,
+      28px 24px,
+      176.5px 150px,
+      50px 16px,
+      53px 16px,
+      201.5px 91px,
+      75px 224px,
+      78px 224px,
+      226.5px 350.5px,
+      100px 19px,
+      103px 19px,
+      251.5px 121px,
+      125px 120px,
+      128px 120px,
+      276.5px 187px,
+      150px 31px,
+      153px 31px,
+      301.5px 120.5px,
+      175px 235px,
+      178px 235px,
+      326.5px 384.5px,
+      200px 121px,
+      203px 121px,
+      351.5px 228.5px,
+      225px 224px,
+      228px 224px,
+      376.5px 364.5px,
+      250px 26px,
+      253px 26px,
+      401.5px 105px,
+      275px 75px,
+      278px 75px,
+      426.5px 180px;
+  }
+
+  to {
+    background-position:
+      0px 6800px,
+      3px 6800px,
+      151.5px 6917.5px,
+      25px 13632px,
+      28px 13632px,
+      176.5px 13758px,
+      50px 5416px,
+      53px 5416px,
+      201.5px 5491px,
+      75px 17175px,
+      78px 17175px,
+      226.5px 17301.5px,
+      100px 5119px,
+      103px 5119px,
+      251.5px 5221px,
+      125px 8428px,
+      128px 8428px,
+      276.5px 8495px,
+      150px 9876px,
+      153px 9876px,
+      301.5px 9965.5px,
+      175px 13391px,
+      178px 13391px,
+      326.5px 13540.5px,
+      200px 14741px,
+      203px 14741px,
+      351.5px 14848.5px,
+      225px 18770px,
+      228px 18770px,
+      376.5px 18910.5px,
+      250px 5082px,
+      253px 5082px,
+      401.5px 5161px,
+      275px 6375px,
+      278px 6375px,
+      426.5px 6480px;
   }
 }
