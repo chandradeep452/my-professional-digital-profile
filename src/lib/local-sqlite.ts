@@ -183,6 +183,16 @@ export function localGetUserById(id: string): AuthUser | null {
   return user;
 }
 
+export function localUpdateUserStudentId(
+  userId: string,
+  studentId: string
+): AuthUser | null {
+  const db = getSqliteDb();
+  const cleanStudentId = studentId.trim().toUpperCase();
+  db.prepare('UPDATE users SET student_id = ? WHERE id = ?').run(cleanStudentId, userId);
+  return localGetUserById(userId);
+}
+
 function mapStudentRow(db: Database.Database, row: any): Student {
   const student: Student = {
     id: row.id,

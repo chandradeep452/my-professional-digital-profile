@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllStudents, getStudentByStudentId, getStudentByUserId, saveStudent } from '@/lib/db';
-import { getSessionUser } from '@/lib/auth';
+import {
+  getAllStudents,
+  getStudentByStudentId,
+  getStudentByUserId,
+  getUserByStudentId,
+  saveStudent,
+  updateUserStudentId,
+} from '@/lib/db';
+import { attachSessionCookie, getSessionUser } from '@/lib/auth';
 import { StudentSubmissionPayload } from '@/types';
 
 // Regex to detect explicit phone numbers or 10-12 consecutive digits
@@ -54,9 +61,9 @@ export async function POST(req: NextRequest) {
 
     const body = (await req.json()) as StudentSubmissionPayload;
 
-    const effectiveStudentId = (session.studentId || body.studentId || '').trim().toUpperCase();
+    const effectiveStudentId = (body.studentId || session.studentId || '').trim().toUpperCase();
     if (!effectiveStudentId) {
-      return NextResponse.json({ error: 'Student ID / Roll Number is required' }, { status: 400 });
+      return NextResponse.json({ error: 'Student ID / Registration Number is required' }, { status: 400 });
     }
     if (!body.fullName?.trim()) {
       return NextResponse.json({ error: 'Full Name is required' }, { status: 400 });
@@ -80,12 +87,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Professional Headline / Bio is required' }, { status: 400 });
     }
 
-    // Ownership check so one student cannot overwrite another student's profile
+    // Ownership check so one student cannot overwrite another student's profile or claim another ID
     const existingByStudentId = await getStudentByStudentId(effectiveStudentId);
-    if (existingByStudentId?.userId && existingByStudentId.userId !== session.id) {
+    if (existingByStudentId && existingByStudentId.userId !== session.id) {
       return NextResponse.json(
-        { error: 'This Student ID is already linked to another student account.' },
+        { error: 'This Registration Number is already linked to another student account.' },
         { status: 403 }
+      );
+    }
+
+    const existingUserWithId = await getUserByStudentId(effectiveStudentId);
+    if (existingUserWithId && existingUserWithId.id !== session.id) {
+      return NextResponse.json(
+        { error: 'This Registration Number is already registered to another student account.' },
+        { status: 409 }
       );
     }
 
@@ -133,7 +148,12 @@ export async function POST(req: NextRequest) {
       session.id
     );
 
-    return NextResponse.json(
+    const updatedUser =
+      session.studentId !== effectiveStudentId
+        ? await updateUserStudentId(session.id, effectiveStudentId)
+        : null;
+
+    const res = NextResponse.json(
       {
         success: true,
         message: 'Professional profile saved successfully!',
@@ -141,6 +161,12 @@ export async function POST(req: NextRequest) {
       },
       { status: 201 }
     );
+
+    if (updatedUser) {
+      attachSessionCookie(res, updatedUser);
+    }
+
+    return res;
   } catch (error: any) {
     console.error('Error saving student:', error);
     return NextResponse.json({ error: error.message || 'Failed to save student profile' }, { status: 500 });

@@ -213,6 +213,18 @@ export async function neonGetUserById(id: string): Promise<AuthUser | null> {
   return user;
 }
 
+export async function neonUpdateUserStudentId(
+  userId: string,
+  studentId: string
+): Promise<AuthUser | null> {
+  const sql = await ensureSchema();
+  const cleanStudentId = studentId.trim().toUpperCase();
+  await sql`
+    UPDATE users SET student_id = ${cleanStudentId} WHERE id = ${userId}
+  `;
+  return neonGetUserById(userId);
+}
+
 function mapStudentRow(row: any): Student {
   return {
     id: row.id,

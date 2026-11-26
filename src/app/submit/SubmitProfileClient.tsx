@@ -663,16 +663,15 @@ export default function SubmitProfileClient({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-normal text-zinc-300 uppercase tracking-wider mb-1.5">
-                Student ID / Roll Number *
+                Student ID / Registration Number *
               </label>
               <input
                 type="text"
                 required
-                readOnly={Boolean(authUser.studentId)}
                 placeholder="e.g. 22CS101"
                 value={studentId}
                 onChange={(e) => setStudentId(e.target.value)}
-                className={`${inputClass} ${authUser.studentId ? 'opacity-75 cursor-not-allowed' : ''}`}
+                className={inputClass}
               />
             </div>
 

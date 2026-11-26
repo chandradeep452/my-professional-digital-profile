@@ -5,6 +5,7 @@ import {
   neonGetUserByEmail,
   neonGetUserByStudentId,
   neonGetUserById,
+  neonUpdateUserStudentId,
   neonGetAllStudents,
   neonGetStudentById,
   neonGetStudentByStudentId,
@@ -19,6 +20,7 @@ import {
   localGetUserByEmail,
   localGetUserByStudentId,
   localGetUserById,
+  localUpdateUserStudentId,
   localGetAllStudents,
   localGetStudentById,
   localGetStudentByStudentId,
@@ -58,6 +60,15 @@ export async function getUserByStudentId(studentId: string): Promise<DbUserRow |
 
 export async function getUserById(id: string): Promise<AuthUser | null> {
   return useLocalSqlite() ? localGetUserById(id) : neonGetUserById(id);
+}
+
+export async function updateUserStudentId(
+  userId: string,
+  studentId: string
+): Promise<AuthUser | null> {
+  return useLocalSqlite()
+    ? localUpdateUserStudentId(userId, studentId)
+    : neonUpdateUserStudentId(userId, studentId);
 }
 
 export async function getAllStudents(filters?: {
