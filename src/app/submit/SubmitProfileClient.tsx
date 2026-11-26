@@ -22,7 +22,8 @@ import {
   Sparkles,
   CloudUpload,
   Eye,
-  ArrowLeft
+  ArrowLeft,
+  Camera
 } from 'lucide-react';
 
 interface SkillItem {
@@ -141,6 +142,10 @@ export default function SubmitProfileClient({
     }))
   );
 
+  // Profile Photo Upload State
+  const [photoPath, setPhotoPath] = useState(initialProfile?.photoPath || '');
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+
   // Resume Upload State
   const [resumePath, setResumePath] = useState(initialProfile?.resumePath || '');
   const [resumeFileName, setResumeFileName] = useState(
@@ -155,6 +160,42 @@ export default function SubmitProfileClient({
   const [deleting, setDeleting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  // Process profile photo upload
+  const processPhotoFile = async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      setErrorMsg('Profile photo must be an image file (PNG, JPG, or WEBP).');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setErrorMsg('Profile photo size must be less than 5MB.');
+      return;
+    }
+
+    try {
+      setIsUploadingPhoto(true);
+      setErrorMsg(null);
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('type', 'photo');
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to upload profile photo');
+      }
+
+      setPhotoPath(data.url);
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Error uploading profile photo');
+    } finally {
+      setIsUploadingPhoto(false);
+    }
+  };
 
   // Process and upload file
   const processResumeFile = async (file: File) => {
@@ -402,6 +443,7 @@ export default function SubmitProfileClient({
         linkedinUrl: linkedinUrl.trim() || undefined,
         githubUrl: githubUrl.trim() || undefined,
         portfolioUrl: portfolioUrl.trim() || undefined,
+        photoPath: photoPath || '',
         resumePath,
         skills,
         projects: cleanedProjects,
@@ -565,6 +607,57 @@ export default function SubmitProfileClient({
           <div className="flex items-center gap-2.5 border-b border-white/10 pb-4">
             <User className="w-5 h-5 text-zinc-200" />
             <h2 className="text-lg font-medium text-white">1. Academic & Identity Details</h2>
+          </div>
+
+          {/* Student Photo Uploader */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-black/65 border border-white/12">
+            <div className="flex items-center gap-4">
+              <div className="w-20 h-20 rounded-2xl bg-zinc-900 border border-white/20 overflow-hidden flex items-center justify-center shrink-0">
+                {photoPath ? (
+                  <img
+                    src={photoPath}
+                    alt={fullName || 'Student Photo'}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <Camera className="w-7 h-7 text-zinc-400" />
+                )}
+              </div>
+
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-white">Student Profile Photo</p>
+                <p className="text-xs text-zinc-400 font-normal">
+                  Displayed on your profile card and recruiter directory (PNG, JPG, WEBP up to 5MB).
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+              <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-100 hover:bg-white text-zinc-950 text-xs font-medium transition cursor-pointer">
+                <Upload className="w-3.5 h-3.5" />
+                <span>{isUploadingPhoto ? 'Uploading...' : photoPath ? 'Change Photo' : 'Upload Photo'}</span>
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) processPhotoFile(f);
+                  }}
+                />
+              </label>
+
+              {photoPath && (
+                <button
+                  type="button"
+                  onClick={() => setPhotoPath('')}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-zinc-950 border border-white/15 text-zinc-300 hover:text-white hover:bg-zinc-900 text-xs font-normal transition cursor-pointer"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Remove</span>
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

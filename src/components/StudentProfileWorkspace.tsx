@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Student } from '@/types';
 import ProfileClientActions from '@/app/profile/[id]/ProfileClientActions';
 import ProfileCertificateViewer from '@/app/profile/[id]/ProfileCertificateViewer';
+import PhotoLightboxModal from '@/components/PhotoLightboxModal';
 import {
   LayoutGrid,
   UserCheck,
@@ -60,6 +61,7 @@ export default function StudentProfileWorkspace({
   previewHref,
 }: StudentProfileWorkspaceProps) {
   const [activeTab, setActiveTab] = useState<ProfileTabKey>('overview');
+  const [showPhotoModal, setShowPhotoModal] = useState(false);
 
   const skillsCount = student.skills?.length || 0;
   const projectsCount = student.projects?.length || 0;
@@ -104,9 +106,24 @@ export default function StudentProfileWorkspace({
         <div className="glass-panel rounded-3xl border border-white/12 p-3.5 sm:p-4 space-y-4 shadow-2xl">
           {/* Compact Student Identity Strip in Sidebar */}
           <div className="flex items-center gap-3 px-2.5 py-2 border-b border-white/10">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-zinc-800 to-zinc-600 flex items-center justify-center text-white font-medium text-sm border border-white/20 shrink-0">
-              {initials}
-            </div>
+            {student.photoPath ? (
+              <button
+                type="button"
+                onClick={() => setShowPhotoModal(true)}
+                title="Click to open photo"
+                className="w-11 h-11 rounded-xl overflow-hidden border border-white/20 shrink-0 cursor-pointer hover:border-white/50 transition"
+              >
+                <img
+                  src={student.photoPath}
+                  alt={student.fullName}
+                  className="w-full h-full object-cover"
+                />
+              </button>
+            ) : (
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-zinc-800 to-zinc-600 flex items-center justify-center text-white font-medium text-sm border border-white/20 shrink-0">
+                {initials}
+              </div>
+            )}
             <div className="min-w-0">
               <p className="text-sm font-medium text-white truncate">{student.fullName}</p>
               <p className="text-[11px] text-zinc-400 font-normal truncate">
@@ -202,10 +219,25 @@ export default function StudentProfileWorkspace({
 
                 <div className="px-6 sm:px-8 pb-7 pt-0 relative">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
-                    <div className="w-22 h-22 sm:w-26 sm:h-26 rounded-3xl bg-zinc-950 p-1.5 shadow-2xl border-4 border-zinc-950 shrink-0 -mt-11 sm:-mt-13">
-                      <div className="w-full h-full rounded-2xl bg-gradient-to-tr from-zinc-800 to-zinc-600 flex items-center justify-center text-white font-medium text-2xl sm:text-3xl shadow-inner border border-white/20">
-                        {initials}
-                      </div>
+                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-zinc-950 p-1.5 shadow-2xl border-4 border-zinc-950 shrink-0 -mt-12 sm:-mt-14">
+                      {student.photoPath ? (
+                        <button
+                          type="button"
+                          onClick={() => setShowPhotoModal(true)}
+                          title="Click to open photo"
+                          className="w-full h-full rounded-2xl overflow-hidden border border-white/25 hover:border-white/60 transition cursor-pointer group/avatar block"
+                        >
+                          <img
+                            src={student.photoPath}
+                            alt={student.fullName}
+                            className="w-full h-full object-cover group-hover/avatar:scale-105 transition duration-300"
+                          />
+                        </button>
+                      ) : (
+                        <div className="w-full h-full rounded-2xl bg-gradient-to-tr from-zinc-800 to-zinc-600 flex items-center justify-center text-white font-medium text-2xl sm:text-3xl shadow-inner border border-white/20">
+                          {initials}
+                        </div>
+                      )}
                     </div>
 
                     <ProfileClientActions
@@ -663,6 +695,16 @@ export default function StudentProfileWorkspace({
           )}
         </AnimatePresence>
       </div>
+
+      {/* Full-Size Student Photo Lightbox Modal */}
+      <PhotoLightboxModal
+        photo={
+          showPhotoModal && student.photoPath
+            ? { url: student.photoPath, name: student.fullName, subtitle: student.studentId }
+            : null
+        }
+        onClose={() => setShowPhotoModal(false)}
+      />
     </div>
   );
 }

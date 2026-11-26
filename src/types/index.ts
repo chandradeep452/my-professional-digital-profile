@@ -51,6 +51,7 @@ export interface Student {
   linkedinUrl?: string;
   githubUrl?: string;
   portfolioUrl?: string;
+  photoPath?: string;
   resumePath?: string;
   createdAt: string;
   updatedAt: string;
@@ -71,6 +72,7 @@ export interface StudentSubmissionPayload {
   linkedinUrl?: string;
   githubUrl?: string;
   portfolioUrl?: string;
+  photoPath?: string;
   resumePath?: string;
   skills: Array<{ name: string; category: string }>;
   projects: Array<{

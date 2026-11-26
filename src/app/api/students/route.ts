@@ -126,6 +126,7 @@ export async function POST(req: NextRequest) {
         linkedinUrl: normalizedLinkedin,
         githubUrl: normalizedGithub,
         portfolioUrl: normalizedPortfolio,
+        photoPath: body.photoPath !== undefined ? body.photoPath.trim() : undefined,
         projects: normalizedProjects,
         certificates: normalizedCerts,
       },

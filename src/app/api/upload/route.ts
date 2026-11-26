@@ -13,13 +13,13 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
-    const type = formData.get('type') as string | null; // 'resume' | 'certificate'
+    const type = formData.get('type') as string | null; // 'resume' | 'certificate' | 'photo'
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    if (!type || !['resume', 'certificate'].includes(type)) {
+    if (!type || !['resume', 'certificate', 'photo'].includes(type)) {
       return NextResponse.json({ error: 'Invalid upload type' }, { status: 400 });
     }
 
@@ -36,6 +36,14 @@ export async function POST(req: NextRequest) {
       if (fileExt !== '.pdf' || mimeType !== 'application/pdf') {
         return NextResponse.json({ error: 'Resume must be a PDF document' }, { status: 400 });
       }
+    } else if (type === 'photo') {
+      const allowedImageExts = ['.png', '.jpg', '.jpeg', '.webp'];
+      if (!allowedImageExts.includes(fileExt) || !mimeType.startsWith('image/')) {
+        return NextResponse.json(
+          { error: 'Profile photo must be an image file (PNG, JPG, JPEG, or WEBP)' },
+          { status: 400 }
+        );
+      }
     } else {
       const allowedExts = ['.pdf', '.png', '.jpg', '.jpeg', '.webp'];
       if (!allowedExts.includes(fileExt)) {
@@ -46,7 +54,8 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const subDir = type === 'resume' ? 'resumes' : 'certificates';
+    const subDir =
+      type === 'resume' ? 'resumes' : type === 'photo' ? 'photos' : 'certificates';
     const safeFilename = `${type}-${randomUUID()}${fileExt}`;
     const pathKey = `${subDir}/${safeFilename}`;
     const buffer = Buffer.from(await file.arrayBuffer());

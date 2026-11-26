@@ -55,6 +55,7 @@ function initLocalTables(db: Database.Database) {
       linkedin_url TEXT,
       github_url TEXT,
       portfolio_url TEXT,
+      photo_path TEXT,
       resume_path TEXT,
       created_at TEXT NOT NULL,
       updated_at TEXT NOT NULL
@@ -102,6 +103,9 @@ function initLocalTables(db: Database.Database) {
   const cols = db.prepare(`PRAGMA table_info(students)`).all() as any[];
   if (!cols.some((c) => c.name === 'user_id')) {
     db.exec(`ALTER TABLE students ADD COLUMN user_id TEXT`);
+  }
+  if (!cols.some((c) => c.name === 'photo_path')) {
+    db.exec(`ALTER TABLE students ADD COLUMN photo_path TEXT`);
   }
 }
 
@@ -194,6 +198,7 @@ function mapStudentRow(db: Database.Database, row: any): Student {
     linkedinUrl: row.linkedin_url || undefined,
     githubUrl: row.github_url || undefined,
     portfolioUrl: row.portfolio_url || undefined,
+    photoPath: row.photo_path || undefined,
     resumePath: row.resume_path || undefined,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -284,16 +289,18 @@ export function localSaveStudent(payload: StudentSubmissionPayload, ownerUserId?
 
   let existing: any = null;
   if (ownerUserId) {
-    existing = db.prepare('SELECT id FROM students WHERE user_id = ? LIMIT 1').get(ownerUserId);
+    existing = db.prepare('SELECT id, photo_path FROM students WHERE user_id = ? LIMIT 1').get(ownerUserId);
   }
   if (!existing) {
-    existing = db.prepare('SELECT id FROM students WHERE student_id = ? LIMIT 1').get(normalizedStudentId);
+    existing = db.prepare('SELECT id, photo_path FROM students WHERE student_id = ? LIMIT 1').get(normalizedStudentId);
   }
 
   const tx = db.transaction(() => {
     let studentUuid: string;
     if (existing) {
       studentUuid = existing.id;
+      const nextPhotoPath =
+        payload.photoPath !== undefined ? payload.photoPath || null : existing.photo_path || null;
       db.prepare(`
         UPDATE students SET
           student_id = ?,
@@ -308,6 +315,7 @@ export function localSaveStudent(payload: StudentSubmissionPayload, ownerUserId?
           linkedin_url = ?,
           github_url = ?,
           portfolio_url = ?,
+          photo_path = ?,
           resume_path = COALESCE(?, resume_path),
           updated_at = ?
         WHERE id = ?
@@ -324,6 +332,7 @@ export function localSaveStudent(payload: StudentSubmissionPayload, ownerUserId?
         payload.linkedinUrl || null,
         payload.githubUrl || null,
         payload.portfolioUrl || null,
+        nextPhotoPath,
         payload.resumePath || null,
         now,
         studentUuid
@@ -338,8 +347,8 @@ export function localSaveStudent(payload: StudentSubmissionPayload, ownerUserId?
         INSERT INTO students (
           id, student_id, user_id, full_name, institutional_email, degree, branch,
           graduation_year, cgpa, headline_bio, linkedin_url, github_url,
-          portfolio_url, resume_path, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          portfolio_url, photo_path, resume_path, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).run(
         studentUuid,
         normalizedStudentId,
@@ -354,6 +363,7 @@ export function localSaveStudent(payload: StudentSubmissionPayload, ownerUserId?
         payload.linkedinUrl || null,
         payload.githubUrl || null,
         payload.portfolioUrl || null,
+        payload.photoPath || null,
         payload.resumePath || null,
         now,
         now

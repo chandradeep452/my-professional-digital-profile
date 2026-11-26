@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Student } from '@/types';
 import CustomSelect from '@/components/CustomSelect';
 import SparkleBorderButton from '@/components/SparkleBorderButton';
+import PhotoLightboxModal from '@/components/PhotoLightboxModal';
 import { EncryptedText } from '@/components/ui/encrypted-text';
 import { 
   Search, 
@@ -28,6 +29,7 @@ export default function RecruiterDirectoryClient({ initialStudents }: Props) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBranch, setSelectedBranch] = useState('All');
   const [selectedYear, setSelectedYear] = useState('All');
+  const [selectedPhoto, setSelectedPhoto] = useState<{ url: string; name: string; studentId: string } | null>(null);
 
   // Extract unique branches and years for filters
   const branches = useMemo(() => {
@@ -254,7 +256,7 @@ export default function RecruiterDirectoryClient({ initialStudents }: Props) {
         ) : (
           <motion.div
             layout
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-7"
           >
             <AnimatePresence>
               {filteredStudents.map((student, idx) => (
@@ -266,19 +268,52 @@ export default function RecruiterDirectoryClient({ initialStudents }: Props) {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.4, delay: idx * 0.05 }}
                   whileHover={{ y: -6, scale: 1.015 }}
-                  className="glass-card rounded-3xl p-6 flex flex-col justify-between space-y-5 relative overflow-hidden group border border-white/12"
+                  className="glass-card rounded-3xl p-7 sm:p-8 min-h-[320px] flex flex-col justify-between space-y-6 relative overflow-hidden group border border-white/12"
                 >
                   <div className="space-y-4">
-                    {/* Header: Name, Student ID, CGPA badge */}
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <h3 className="font-medium text-lg text-white group-hover:text-zinc-200 transition tracking-tight">
-                          {student.fullName}
-                        </h3>
-                        <p className="text-xs text-zinc-400 font-normal">
-                          ID: <span className="text-zinc-300 font-normal">{student.studentId}</span>
-                        </p>
+                    {/* Header: Photo Avatar, Name, Student ID, CGPA badge */}
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-center gap-3.5 min-w-0">
+                        {student.photoPath ? (
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setSelectedPhoto({
+                                url: student.photoPath!,
+                                name: student.fullName,
+                                studentId: student.studentId,
+                              })
+                            }
+                            title="Click to open photo"
+                            className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border border-white/25 hover:border-white/60 bg-zinc-900 shrink-0 cursor-pointer group/photo transition shadow-lg"
+                          >
+                            <img
+                              src={student.photoPath}
+                              alt={student.fullName}
+                              className="w-full h-full object-cover group-hover/photo:scale-105 transition duration-300"
+                            />
+                          </button>
+                        ) : (
+                          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-zinc-800 to-zinc-600 flex items-center justify-center text-white font-medium text-lg sm:text-xl border border-white/20 shrink-0 shadow-lg">
+                            {student.fullName
+                              .split(' ')
+                              .map((n) => n[0])
+                              .join('')
+                              .slice(0, 2)
+                              .toUpperCase()}
+                          </div>
+                        )}
+
+                        <div className="min-w-0">
+                          <h3 className="font-medium text-lg sm:text-xl text-white group-hover:text-zinc-200 transition tracking-tight truncate">
+                            {student.fullName}
+                          </h3>
+                          <p className="text-xs text-zinc-400 font-normal mt-0.5 truncate">
+                            ID: <span className="text-zinc-300 font-normal">{student.studentId}</span>
+                          </p>
+                        </div>
                       </div>
+
                       <span className="shrink-0 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/10 text-zinc-100 border border-white/20 shadow-xs">
                         CGPA {student.cgpa.toFixed(2)}
                       </span>
@@ -369,6 +404,16 @@ export default function RecruiterDirectoryClient({ initialStudents }: Props) {
           </motion.div>
         )}
       </div>
+
+      {/* Full-Size Photo Modal */}
+      <PhotoLightboxModal
+        photo={
+          selectedPhoto
+            ? { url: selectedPhoto.url, name: selectedPhoto.name, subtitle: selectedPhoto.studentId }
+            : null
+        }
+        onClose={() => setSelectedPhoto(null)}
+      />
     </div>
   );
 }

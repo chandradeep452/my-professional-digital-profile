@@ -68,6 +68,7 @@ async function ensureSchema(): Promise<NeonQueryFunction<false, false>> {
           linkedin_url TEXT,
           github_url TEXT,
           portfolio_url TEXT,
+          photo_path TEXT,
           resume_path TEXT,
           created_at TEXT NOT NULL,
           updated_at TEXT NOT NULL
@@ -75,6 +76,7 @@ async function ensureSchema(): Promise<NeonQueryFunction<false, false>> {
       `;
 
       await sql`ALTER TABLE students ADD COLUMN IF NOT EXISTS user_id TEXT`;
+      await sql`ALTER TABLE students ADD COLUMN IF NOT EXISTS photo_path TEXT`;
 
       await sql`
         CREATE TABLE IF NOT EXISTS skills (
@@ -226,6 +228,7 @@ function mapStudentRow(row: any): Student {
     linkedinUrl: row.linkedin_url || undefined,
     githubUrl: row.github_url || undefined,
     portfolioUrl: row.portfolio_url || undefined,
+    photoPath: row.photo_path || undefined,
     resumePath: row.resume_path || undefined,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -381,6 +384,7 @@ export async function neonSaveStudent(
         linkedin_url = ${payload.linkedinUrl || null},
         github_url = ${payload.githubUrl || null},
         portfolio_url = ${payload.portfolioUrl || null},
+        photo_path = CASE WHEN ${payload.photoPath !== undefined} THEN ${payload.photoPath || null} ELSE photo_path END,
         resume_path = COALESCE(${payload.resumePath || null}, resume_path),
         updated_at = ${now}
       WHERE id = ${studentUuid}
@@ -397,7 +401,7 @@ export async function neonSaveStudent(
       INSERT INTO students (
         id, student_id, user_id, full_name, institutional_email, degree, branch,
         graduation_year, cgpa, headline_bio, linkedin_url, github_url,
-        portfolio_url, resume_path, created_at, updated_at
+        portfolio_url, photo_path, resume_path, created_at, updated_at
       ) VALUES (
         ${studentUuid},
         ${normalizedStudentId},
@@ -412,6 +416,7 @@ export async function neonSaveStudent(
         ${payload.linkedinUrl || null},
         ${payload.githubUrl || null},
         ${payload.portfolioUrl || null},
+        ${payload.photoPath || null},
         ${payload.resumePath || null},
         ${now},
         ${now}
