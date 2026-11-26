@@ -3,6 +3,8 @@ import { Open_Sans } from 'next/font/google';
 import './globals.css';
 import { ShieldCheck } from 'lucide-react';
 import NavbarClient from './NavbarClient';
+import AntigravityFieldBackground from '@/components/AntigravityFieldBackground';
+import { getSessionUser } from '@/lib/auth';
 
 const openSans = Open_Sans({
   subsets: ['latin'],
@@ -15,26 +17,28 @@ export const metadata: Metadata = {
   title: 'My Professional Digital Profile — Modern Talent Portal',
   description: 'Verified student digital profiles, skills, projects, certificates, and resumes for recruiters with fluid animations.',
   icons: {
-    icon: '/logo.jpg',
-    apple: '/logo.jpg',
+    icon: '/logo.jpg?v=2',
+    apple: '/logo.jpg?v=2',
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const sessionUser = await getSessionUser();
+
   return (
     <html lang="en" className={`dark ${openSans.variable}`}>
       <body className={`${openSans.className} min-h-screen flex flex-col bg-black text-zinc-100 font-normal antialiased selection:bg-white/20 selection:text-white relative`}>
-        {/* Dynamic Animated Rain & Ambient Glow Backdrops */}
-        <div className="rain-bg-container" aria-hidden="true" />
+        {/* Interactive Antigravity Cursor-Following Particle Field */}
+        <AntigravityFieldBackground />
         <div className="ambient-glow-1" />
         <div className="ambient-glow-2" />
 
         {/* Global Animated Glass Navbar */}
-        <NavbarClient />
+        <NavbarClient initialUser={sessionUser} />
 
         {/* Main Viewport */}
         <main className="flex-1 relative z-10">

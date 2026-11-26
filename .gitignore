@@ -40,3 +40,6 @@ next-env.d.ts
 data/*.db-journal
 data/*.db-wal
 data/*.db-shm
+
+# local uploaded test files
+/public/uploads/

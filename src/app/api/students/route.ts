@@ -1,19 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllStudents, saveStudent } from '@/lib/db';
+import { getAllStudents, getStudentByStudentId, getStudentByUserId, saveStudent } from '@/lib/db';
+import { getSessionUser } from '@/lib/auth';
 import { StudentSubmissionPayload } from '@/types';
 
 // Regex to detect explicit phone numbers or 10-12 consecutive digits
 const PHONE_PATTERN = /(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}|\b\d{10}\b/;
 
+function normalizeUrl(raw?: string): string | undefined {
+  const val = raw?.trim();
+  if (!val) return undefined;
+  if (/^https?:\/\//i.test(val)) return val;
+  return `https://${val}`;
+}
+
 export async function GET(req: NextRequest) {
   try {
+    const session = await getSessionUser();
+    if (!session) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
+    if (session.role === 'student') {
+      const own =
+        (await getStudentByUserId(session.id)) ||
+        (session.studentId ? await getStudentByStudentId(session.studentId) : null);
+      const list = own ? [own] : [];
+      return NextResponse.json({ success: true, count: list.length, students: list });
+    }
+
     const { searchParams } = new URL(req.url);
     const search = searchParams.get('search') || undefined;
     const branch = searchParams.get('branch') || undefined;
     const yearStr = searchParams.get('year');
     const year = yearStr ? parseInt(yearStr, 10) : undefined;
 
-    const students = getAllStudents({ search, branch, year });
+    const students = await getAllStudents({ search, branch, year });
     return NextResponse.json({ success: true, count: students.length, students });
   } catch (error: any) {
     console.error('Error fetching students:', error);
@@ -23,10 +44,18 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await getSessionUser();
+    if (!session) {
+      return NextResponse.json({ error: 'Please sign in as a student to save your profile.' }, { status: 401 });
+    }
+    if (session.role !== 'student') {
+      return NextResponse.json({ error: 'Only signed-in students can create or edit student profiles.' }, { status: 403 });
+    }
+
     const body = (await req.json()) as StudentSubmissionPayload;
 
-    // Validate Required Fields
-    if (!body.studentId?.trim()) {
+    const effectiveStudentId = (session.studentId || body.studentId || '').trim().toUpperCase();
+    if (!effectiveStudentId) {
       return NextResponse.json({ error: 'Student ID / Roll Number is required' }, { status: 400 });
     }
     if (!body.fullName?.trim()) {
@@ -51,32 +80,66 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Professional Headline / Bio is required' }, { status: 400 });
     }
 
-    // Privacy Policy Check: Disallow phone numbers in all text fields
-    const textToCheck = `${body.fullName} ${body.headlineBio} ${body.portfolioUrl || ''} ${JSON.stringify(body.projects || [])}`;
-    if (PHONE_PATTERN.test(textToCheck)) {
-      return NextResponse.json({
-        error: 'Privacy Policy Violation: Phone numbers must not be submitted anywhere in your profile.',
-      }, { status: 400 });
+    // Ownership check so one student cannot overwrite another student's profile
+    const existingByStudentId = await getStudentByStudentId(effectiveStudentId);
+    if (existingByStudentId?.userId && existingByStudentId.userId !== session.id) {
+      return NextResponse.json(
+        { error: 'This Student ID is already linked to another student account.' },
+        { status: 403 }
+      );
     }
 
-    // Save Student in SQLite
-    const savedStudent = saveStudent({
-      ...body,
-      studentId: body.studentId.trim().toUpperCase(),
-      fullName: body.fullName.trim(),
-      institutionalEmail: body.institutionalEmail.trim().toLowerCase(),
-      degree: body.degree.trim(),
-      branch: body.branch.trim(),
-      graduationYear: Number(body.graduationYear),
-      cgpa: Number(body.cgpa),
-      headlineBio: body.headlineBio.trim(),
-    });
+    // Normalize URLs (e.g. www.mg.com -> https://www.mg.com)
+    const normalizedPortfolio = normalizeUrl(body.portfolioUrl);
+    const normalizedLinkedin = normalizeUrl(body.linkedinUrl);
+    const normalizedGithub = normalizeUrl(body.githubUrl);
+    const normalizedProjects = (body.projects || []).map((p) => ({
+      ...p,
+      githubUrl: normalizeUrl(p.githubUrl),
+      liveDemoUrl: normalizeUrl(p.liveDemoUrl),
+    }));
+    const normalizedCerts = (body.certificates || []).map((c) => ({
+      ...c,
+      credentialUrl: normalizeUrl(c.credentialUrl),
+    }));
 
-    return NextResponse.json({
-      success: true,
-      message: 'Professional profile saved successfully!',
-      student: savedStudent,
-    }, { status: 201 });
+    // Privacy Policy Check: Disallow phone numbers in all text fields
+    const textToCheck = `${body.fullName} ${body.headlineBio} ${normalizedPortfolio || ''} ${JSON.stringify(normalizedProjects)}`;
+    if (PHONE_PATTERN.test(textToCheck)) {
+      return NextResponse.json(
+        { error: 'Phone numbers must not be submitted anywhere in your profile.' },
+        { status: 400 }
+      );
+    }
+
+    const savedStudent = await saveStudent(
+      {
+        ...body,
+        studentId: effectiveStudentId,
+        fullName: body.fullName.trim(),
+        institutionalEmail: body.institutionalEmail.trim().toLowerCase(),
+        degree: body.degree.trim(),
+        branch: body.branch.trim(),
+        graduationYear: Number(body.graduationYear),
+        cgpa: Number(body.cgpa),
+        headlineBio: body.headlineBio.trim(),
+        linkedinUrl: normalizedLinkedin,
+        githubUrl: normalizedGithub,
+        portfolioUrl: normalizedPortfolio,
+        projects: normalizedProjects,
+        certificates: normalizedCerts,
+      },
+      session.id
+    );
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Professional profile saved successfully!',
+        student: savedStudent,
+      },
+      { status: 201 }
+    );
   } catch (error: any) {
     console.error('Error saving student:', error);
     return NextResponse.json({ error: error.message || 'Failed to save student profile' }, { status: 500 });

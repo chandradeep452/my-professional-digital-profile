@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Student } from '@/types';
 import CustomSelect from '@/components/CustomSelect';
-import IridescentButton from '@/components/IridescentButton';
+import SparkleBorderButton from '@/components/SparkleBorderButton';
 import { EncryptedText } from '@/components/ui/encrypted-text';
 import { 
   Search, 
@@ -65,7 +65,7 @@ export default function RecruiterDirectoryClient({ initialStudents }: Props) {
   return (
     <div className="space-y-10 pb-16">
       {/* Animated Hero Section */}
-      <section className="relative overflow-hidden pt-12 pb-16 px-4 sm:px-6 lg:px-8 border-b border-white/10 bg-gradient-to-b from-black/75 via-black/45 to-transparent backdrop-blur-[2px]">
+      <section className="relative overflow-hidden pt-12 pb-16 px-4 sm:px-6 lg:px-8 border-b border-white/10 bg-transparent">
         <div className="max-w-5xl mx-auto text-center space-y-5">
           <motion.div
             initial={{ opacity: 0, y: -15 }}
@@ -214,16 +214,6 @@ export default function RecruiterDirectoryClient({ initialStudents }: Props) {
               {filteredStudents.length} candidate{filteredStudents.length === 1 ? '' : 's'}
             </span>
           </h2>
-
-          <Link href="/submit">
-            <motion.span
-              whileHover={{ x: 3 }}
-              className="text-xs font-normal text-zinc-300 hover:text-white flex items-center gap-1.5 transition drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)]"
-            >
-              <span>Are you a student? Submit your profile</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </motion.span>
-          </Link>
         </div>
 
         {/* Empty State vs Candidate Grid */}
@@ -239,12 +229,9 @@ export default function RecruiterDirectoryClient({ initialStudents }: Props) {
             <div className="space-y-2">
               <h3 className="text-2xl font-medium text-white">No Student Profiles Yet</h3>
               <p className="text-sm text-zinc-400 font-normal leading-relaxed max-w-md mx-auto">
-                The talent directory is currently fresh and ready for submissions. Students can enter their academic credentials, projects, certifications, and resumes.
+                The talent directory is currently waiting for student submissions. Once students sign in and publish their profiles, they will appear here.
               </p>
             </div>
-            <Link href="/submit" className="inline-block">
-              <IridescentButton size="md">Submit First Profile</IridescentButton>
-            </Link>
           </motion.div>
         ) : filteredStudents.length === 0 ? (
           <div className="glass-panel rounded-3xl border border-white/15 p-12 text-center space-y-3">
@@ -344,7 +331,7 @@ export default function RecruiterDirectoryClient({ initialStudents }: Props) {
 
                   {/* Action Buttons Footer with Fluid Motion */}
                   <div className="pt-2 flex items-center gap-2.5">
-                    <Link href={`/profile/${student.id}`} className="flex-1">
+                    <Link href={`/profile/${student.id}?from=directory`} className="flex-1">
                       <motion.div
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.97 }}

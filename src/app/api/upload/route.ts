@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
-import fs from 'fs';
 import { randomUUID } from 'crypto';
+import { saveUploadedFile } from '@/lib/db';
+import { getSessionUser } from '@/lib/auth';
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await getSessionUser();
+    if (!session || session.role !== 'student') {
+      return NextResponse.json({ error: 'Please sign in as a student to upload files.' }, { status: 401 });
+    }
+
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
     const type = formData.get('type') as string | null; // 'resume' | 'certificate'
@@ -24,7 +30,7 @@ export async function POST(req: NextRequest) {
     }
 
     const fileExt = path.extname(file.name).toLowerCase();
-    const mimeType = file.type;
+    const mimeType = file.type || 'application/octet-stream';
 
     if (type === 'resume') {
       if (fileExt !== '.pdf' || mimeType !== 'application/pdf') {
@@ -33,27 +39,26 @@ export async function POST(req: NextRequest) {
     } else {
       const allowedExts = ['.pdf', '.png', '.jpg', '.jpeg', '.webp'];
       if (!allowedExts.includes(fileExt)) {
-        return NextResponse.json({ error: 'Certificate must be a PDF or image file (PNG/JPG/WEBP)' }, { status: 400 });
+        return NextResponse.json(
+          { error: 'Certificate must be a PDF or image file (PNG/JPG/WEBP)' },
+          { status: 400 }
+        );
       }
     }
 
-    const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
     const subDir = type === 'resume' ? 'resumes' : 'certificates';
-    const uploadDir = isServerless
-      ? path.join('/tmp', 'uploads', subDir)
-      : path.join(process.cwd(), 'public', 'uploads', subDir);
-
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-
     const safeFilename = `${type}-${randomUUID()}${fileExt}`;
-    const destinationPath = path.join(uploadDir, safeFilename);
-
+    const pathKey = `${subDir}/${safeFilename}`;
     const buffer = Buffer.from(await file.arrayBuffer());
-    fs.writeFileSync(destinationPath, buffer);
 
-    const publicPath = `/uploads/${subDir}/${safeFilename}`;
+    await saveUploadedFile({
+      pathKey,
+      mimeType,
+      originalName: file.name,
+      buffer,
+    });
+
+    const publicPath = `/uploads/${pathKey}`;
 
     return NextResponse.json({
       success: true,

@@ -358,6 +358,171 @@
   }
 }
 
+/* Realism Specular Rim & Cyan Glow Button (Uiverse.io by Spacious74) */
+.realism-btn {
+  cursor: pointer;
+  border-radius: 16px;
+  border: none;
+  padding: 2px;
+  background: radial-gradient(circle 80px at 80% -10%, #ffffff, #181b1b);
+  position: relative;
+  isolation: isolate;
+  display: inline-block;
+  font-family: inherit;
+  font-weight: 400;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.realism-btn:hover {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.realism-btn:active {
+  transform: scale(0.97);
+}
+
+.realism-btn::after {
+  content: "";
+  position: absolute;
+  width: 65%;
+  height: 60%;
+  border-radius: 120px;
+  top: 0;
+  right: 0;
+  box-shadow: 0 0 20px #ffffff38;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.realism-blob1 {
+  position: absolute;
+  width: 70px;
+  height: 100%;
+  border-radius: 16px;
+  bottom: 0;
+  left: 0;
+  background: radial-gradient(
+    circle 60px at 0% 100%,
+    #3fe9ff,
+    #0000ff80,
+    transparent
+  );
+  box-shadow: -10px 10px 30px #0051ff2d;
+  pointer-events: none;
+}
+
+.realism-inner {
+  border-radius: 14px;
+  color: #fff;
+  z-index: 3;
+  position: relative;
+  background: radial-gradient(circle 80px at 80% -50%, #777777, #0f1111);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  font-weight: 400;
+}
+
+.realism-btn--sm .realism-inner {
+  font-size: 0.875rem;
+  padding: 9px 20px;
+}
+
+.realism-btn--md .realism-inner {
+  font-size: 1.05rem;
+  padding: 13px 28px;
+}
+
+.realism-inner::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  border-radius: 14px;
+  background: radial-gradient(
+    circle 60px at 0% 100%,
+    #00e1ff1a,
+    #0000ff11,
+    transparent
+  );
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Sparkle-Matched Glow Border Button (inspired by Uiverse.io by nima-mollazadeh) */
+.sparkle-border-btn {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #ffffff;
+  background: linear-gradient(45deg, #3b82f6, #6366f1, #a855f7, #ef4444, #f59e0b);
+  border-radius: 12px;
+  font-family: inherit;
+  font-weight: 400;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sparkle-border-btn--sm {
+  padding: 10px 22px;
+  font-size: 0.875rem;
+}
+
+.sparkle-border-btn--md {
+  padding: 13px 28px;
+  font-size: 1rem;
+}
+
+.sparkle-border-btn:hover {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.sparkle-border-btn:active {
+  transform: scale(0.97);
+}
+
+.sparkle-border-btn span {
+  position: relative;
+  z-index: 2;
+}
+
+.sparkle-border-btn::before {
+  content: "";
+  position: absolute;
+  inset: 1.5px;
+  background: #141418;
+  border-radius: 10.5px;
+  transition: opacity 0.45s ease;
+  z-index: 1;
+}
+
+.sparkle-border-btn:hover::before {
+  opacity: 0.68;
+}
+
+.sparkle-border-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, #3b82f6, #6366f1, #a855f7, #ef4444, #f59e0b);
+  border-radius: 12px;
+  transition: opacity 0.45s ease;
+  opacity: 0;
+  filter: blur(18px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.sparkle-border-btn:hover::after {
+  opacity: 0.85;
+}
+
 /* Animated CSS Rain Matrix Background (Uiverse.io by SelfMadeSystem) */
 .rain-bg-container {
   position: fixed;

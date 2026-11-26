@@ -1,3 +1,15 @@
+export type UserRole = 'recruiter' | 'student';
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  fullName: string;
+  role: UserRole;
+  companyName?: string;
+  studentId?: string;
+  createdAt: string;
+}
+
 export interface Skill {
   id: string;
   studentId: string;
@@ -28,6 +40,7 @@ export interface Certificate {
 export interface Student {
   id: string;
   studentId: string;
+  userId?: string;
   fullName: string;
   institutionalEmail: string;
   degree: string;
