@@ -53,13 +53,13 @@ export default function NavbarClient({ initialUser }: NavbarClientProps) {
           >
             <img
               src="/logo.jpg?v=2"
-              alt="My Professional Digital Profile Logo"
+              alt="Professional Digital Profile Logo"
               className="w-full h-full object-contain"
             />
           </motion.div>
           <div className="min-w-0">
             <span className="font-medium text-sm sm:text-lg text-zinc-100 group-hover:text-white transition tracking-tight flex items-center gap-1.5 truncate">
-              <span className="truncate">My Professional Digital Profile</span>
+              <span className="truncate">Professional Digital Profile</span>
               <Sparkles className="w-3.5 h-3.5 text-zinc-300 opacity-85 shrink-0" />
             </span>
             <span className="hidden sm:block text-xs text-zinc-400 font-normal">

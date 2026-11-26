@@ -14,7 +14,7 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'My Professional Digital Profile — Modern Talent Portal',
+  title: 'Professional Digital Profile — Modern Talent Portal',
   description: 'Verified student digital profiles, skills, projects, certificates, and resumes for recruiters with fluid animations.',
   icons: {
     icon: '/logo.jpg?v=2',
@@ -56,7 +56,7 @@ export default async function RootLayout({
               </span>
             </div>
             <p className="text-xs text-zinc-400">
-              &copy; {new Date().getFullYear()} My Professional Digital Profile. Crafted for top campus talent and recruiters.
+              &copy; {new Date().getFullYear()} Professional Digital Profile. Crafted for top campus talent and recruiters.
             </p>
           </div>
         </footer>

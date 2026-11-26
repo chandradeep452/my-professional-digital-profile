@@ -84,7 +84,7 @@ export default function RecruiterDirectoryClient({ initialStudents }: Props) {
             className="text-4xl sm:text-6xl font-medium tracking-tight leading-tight drop-shadow-[0_2px_18px_rgba(0,0,0,0.85)]"
           >
             <EncryptedText
-              text="My Professional Digital Profile"
+              text="Professional Digital Profile"
               encryptedClassName="text-zinc-400"
               revealedClassName="text-white"
               revealDelayMs={95}
