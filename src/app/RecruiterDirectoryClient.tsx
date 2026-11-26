@@ -7,7 +7,7 @@ import { Student } from '@/types';
 import CustomSelect from '@/components/CustomSelect';
 import SparkleBorderButton from '@/components/SparkleBorderButton';
 import PhotoLightboxModal from '@/components/PhotoLightboxModal';
-import { EncryptedText } from '@/components/ui/encrypted-text';
+import { TextEffect } from '@/components/core/text-effect';
 import { 
   Search, 
   Filter, 
@@ -79,20 +79,15 @@ export default function RecruiterDirectoryClient({ initialStudents }: Props) {
             <span>Campus Talent & Recruitment Directory</span>
           </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-6xl font-medium tracking-tight leading-tight drop-shadow-[0_2px_18px_rgba(0,0,0,0.85)]"
+          <TextEffect
+            per="word"
+            as="h1"
+            preset="slide"
+            delay={0.1}
+            className="text-4xl sm:text-6xl font-medium tracking-tight leading-tight text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.85)]"
           >
-            <EncryptedText
-              text="Professional Digital Profile"
-              encryptedClassName="text-zinc-400"
-              revealedClassName="text-white"
-              revealDelayMs={95}
-              flipDelayMs={45}
-            />
-          </motion.h1>
+            Professional Digital Profile
+          </TextEffect>
 
           <motion.p
             initial={{ opacity: 0, y: 15 }}

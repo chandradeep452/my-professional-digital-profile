@@ -6,7 +6,7 @@ import RecruiterDirectoryClient from './RecruiterDirectoryClient';
 import AuthPortalClient from '@/components/AuthPortalClient';
 import SparkleBorderButton from '@/components/SparkleBorderButton';
 import StudentProfileWorkspace from '@/components/StudentProfileWorkspace';
-import { EncryptedText } from '@/components/ui/encrypted-text';
+import { TextEffect } from '@/components/core/text-effect';
 import { Sparkles, UserCheck } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -64,15 +64,14 @@ export default async function HomePage() {
               <span>Welcome, {session.fullName}</span>
             </div>
 
-            <h1 className="text-4xl sm:text-6xl font-medium tracking-tight leading-tight drop-shadow-[0_2px_18px_rgba(0,0,0,0.85)]">
-              <EncryptedText
-                text="Professional Digital Profile"
-                encryptedClassName="text-zinc-400"
-                revealedClassName="text-white"
-                revealDelayMs={95}
-                flipDelayMs={45}
-              />
-            </h1>
+            <TextEffect
+              per="word"
+              as="h1"
+              preset="slide"
+              className="text-4xl sm:text-6xl font-medium tracking-tight leading-tight text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.85)]"
+            >
+              Professional Digital Profile
+            </TextEffect>
 
             <p className="text-zinc-300 max-w-2xl mx-auto text-sm sm:text-base font-normal leading-relaxed">
               You are signed in as a Student{session.studentId ? ` (ID: ${session.studentId})` : ''}. Create your digital portfolio for campus recruiters.
@@ -116,15 +115,14 @@ export default async function HomePage() {
             <span>Campus Talent & Recruitment Directory</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-medium tracking-tight leading-tight drop-shadow-[0_2px_18px_rgba(0,0,0,0.85)]">
-            <EncryptedText
-              text="Professional Digital Profile"
-              encryptedClassName="text-zinc-400"
-              revealedClassName="text-white"
-              revealDelayMs={95}
-              flipDelayMs={45}
-            />
-          </h1>
+          <TextEffect
+            per="word"
+            as="h1"
+            preset="slide"
+            className="text-4xl sm:text-6xl font-medium tracking-tight leading-tight text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.85)]"
+          >
+            Professional Digital Profile
+          </TextEffect>
 
           <p className="text-zinc-300 max-w-2xl mx-auto text-sm sm:text-base font-normal leading-relaxed drop-shadow-[0_1px_8px_rgba(0,0,0,0.8)]">
             Sign in as a Recruiter to explore verified student profiles and resumes, or sign in as a Student to build and edit your digital portfolio.
