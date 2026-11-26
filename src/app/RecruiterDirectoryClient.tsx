@@ -98,7 +98,7 @@ export default function RecruiterDirectoryClient({ initialStudents }: Props) {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-zinc-300 max-w-2xl mx-auto text-sm sm:text-base font-normal leading-relaxed drop-shadow-[0_1px_8px_rgba(0,0,0,0.8)]"
           >
-            Discover verified campus talent, review high-impact student projects, inspect accredited certifications, and download official resumes with zero sensitive data friction.
+            Discover verified campus talent, review high-impact student projects, inspect accredited certifications, and download official resumes.
           </motion.p>
 
           {/* Interactive Metric Cards */}

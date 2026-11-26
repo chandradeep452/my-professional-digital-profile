@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Open_Sans } from 'next/font/google';
 import './globals.css';
-import { ShieldCheck } from 'lucide-react';
 import NavbarClient from './NavbarClient';
 import AntigravityFieldBackground from '@/components/AntigravityFieldBackground';
 import { getSessionUser } from '@/lib/auth';
@@ -47,14 +46,7 @@ export default async function RootLayout({
 
         {/* Global Footer */}
         <footer className="relative z-10 border-t border-white/10 bg-black/80 backdrop-blur-md py-8 mt-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-            <div className="flex items-center gap-2.5 text-xs text-zinc-300 bg-zinc-950/90 px-4 py-2 rounded-full border border-white/15">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <ShieldCheck className="w-4 h-4 text-zinc-200" />
-              <span>
-                <span className="text-white font-medium">Privacy Protected:</span> Student phone numbers, passwords, and sensitive IDs are strictly omitted.
-              </span>
-            </div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center text-center">
             <p className="text-xs text-zinc-400">
               &copy; {new Date().getFullYear()} Professional Digital Profile. Crafted for top campus talent and recruiters.
             </p>

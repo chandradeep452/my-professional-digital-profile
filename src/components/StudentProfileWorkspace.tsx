@@ -19,7 +19,6 @@ import {
   Mail,
   ExternalLink,
   Globe,
-  ShieldCheck,
   Code,
   Download,
   ChevronRight,
@@ -295,13 +294,6 @@ export default function StudentProfileWorkspace({
                       )}
                     </div>
                   </div>
-                </div>
-
-                <div className="px-6 sm:px-8 py-3.5 bg-black/75 border-t border-white/10 flex items-center gap-2.5 text-xs text-zinc-400 font-normal">
-                  <ShieldCheck className="w-4 h-4 text-zinc-200 shrink-0" />
-                  <span>
-                    <span className="text-zinc-100 font-medium">Verified Profile:</span> Student phone number and sensitive credentials withheld per privacy protection standards.
-                  </span>
                 </div>
               </div>
 
