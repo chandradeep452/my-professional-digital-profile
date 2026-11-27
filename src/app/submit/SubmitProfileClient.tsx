@@ -496,9 +496,9 @@ export default function SubmitProfileClient({
   };
 
   const inputClass =
-    'w-full px-4 py-2.5 rounded-xl bg-black/75 border border-white/15 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/15 text-sm font-normal transition';
+    'w-full px-4 py-2.5 rounded-xl bg-white/[0.045] backdrop-blur-md border border-white/15 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:bg-white/[0.075] focus:border-white/40 focus:ring-2 focus:ring-white/15 text-sm font-normal transition';
   const innerInputClass =
-    'w-full px-3.5 py-2 rounded-xl bg-black/85 border border-white/12 text-zinc-100 placeholder-zinc-500 text-sm font-normal focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/15 transition';
+    'w-full px-3.5 py-2 rounded-xl bg-white/[0.04] backdrop-blur-md border border-white/15 text-zinc-100 placeholder-zinc-500 text-sm font-normal focus:outline-none focus:bg-white/[0.07] focus:border-white/40 focus:ring-2 focus:ring-white/15 transition';
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 sm:px-6 relative z-10">

@@ -45,7 +45,7 @@ export default async function RootLayout({
         </main>
 
         {/* Global Footer */}
-        <footer className="relative z-10 border-t border-white/10 bg-black/80 backdrop-blur-md py-8 mt-16">
+        <footer className="relative z-10 border-t border-white/15 bg-black/35 backdrop-blur-xl py-8 mt-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center text-center">
             <p className="text-xs text-zinc-400">
               &copy; {new Date().getFullYear()} Professional Digital Profile. Crafted for top campus talent and recruiters.

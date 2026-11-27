@@ -104,7 +104,7 @@ export default function AuthPortalClient({
   };
 
   const inputClass =
-    'w-full pl-11 pr-4 py-2.5 rounded-xl bg-black/80 border border-white/15 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/15 text-sm font-normal transition';
+    'w-full pl-11 pr-4 py-2.5 rounded-xl bg-white/[0.045] backdrop-blur-md border border-white/15 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:bg-white/[0.075] focus:border-white/40 focus:ring-2 focus:ring-white/15 text-sm font-normal transition';
 
   return (
     <div className={embedded ? 'w-full max-w-lg mx-auto px-4 pb-16' : 'min-h-[82vh] flex items-center justify-center px-4 py-12'}>
@@ -116,7 +116,7 @@ export default function AuthPortalClient({
       >
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-zinc-950/90 border border-white/15 text-zinc-200 text-xs font-normal">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.05] backdrop-blur-md border border-white/15 text-zinc-200 text-xs font-normal">
             <Sparkles className="w-3.5 h-3.5 text-zinc-300" />
             <span>{role === 'recruiter' ? 'Recruiter Access' : 'Student Access'}</span>
           </div>

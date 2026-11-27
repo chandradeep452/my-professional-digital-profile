@@ -213,8 +213,8 @@ export default function StudentProfileWorkspace({
             >
               {/* Profile Card Header with Smoked Obsidian Banner */}
               <div className="glass-panel rounded-3xl border border-white/12 shadow-2xl overflow-hidden relative">
-                <div className="h-32 sm:h-40 bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 relative overflow-hidden border-b border-white/10">
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/10 via-transparent to-transparent" />
+                <div className="h-32 sm:h-40 bg-gradient-to-r from-white/[0.04] via-sky-500/[0.05] to-white/[0.03] relative overflow-hidden border-b border-white/15">
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/12 via-transparent to-transparent" />
                 </div>
 
                 <div className="px-6 sm:px-8 pb-7 pt-0 relative">
@@ -442,21 +442,21 @@ export default function StudentProfileWorkspace({
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                  <div className="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-1">
+                  <div className="p-4 rounded-2xl glass-subcard space-y-1">
                     <span className="text-xs text-zinc-400 uppercase tracking-wider font-normal">Student ID</span>
                     <p className="text-white font-medium">{student.studentId}</p>
                   </div>
-                  <div className="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-1">
+                  <div className="p-4 rounded-2xl glass-subcard space-y-1">
                     <span className="text-xs text-zinc-400 uppercase tracking-wider font-normal">Institutional Email</span>
                     <p className="text-white font-normal break-all">{student.institutionalEmail}</p>
                   </div>
-                  <div className="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-1">
+                  <div className="p-4 rounded-2xl glass-subcard space-y-1">
                     <span className="text-xs text-zinc-400 uppercase tracking-wider font-normal">Degree & Branch</span>
                     <p className="text-white font-normal">
                       {student.degree} in {student.branch}
                     </p>
                   </div>
-                  <div className="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-1">
+                  <div className="p-4 rounded-2xl glass-subcard space-y-1">
                     <span className="text-xs text-zinc-400 uppercase tracking-wider font-normal">Class & CGPA</span>
                     <p className="text-white font-normal">
                       Class of {student.graduationYear} • CGPA {student.cgpa.toFixed(2)} / 10.0
@@ -464,7 +464,7 @@ export default function StudentProfileWorkspace({
                   </div>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-1.5">
+                <div className="p-4 rounded-2xl glass-subcard space-y-1.5">
                   <span className="text-xs text-zinc-400 uppercase tracking-wider font-normal">Headline & Bio</span>
                   <p className="text-sm text-zinc-200 font-normal leading-relaxed">{student.headlineBio}</p>
                 </div>
@@ -482,7 +482,7 @@ export default function StudentProfileWorkspace({
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {Object.entries(skillsByCategory).map(([category, items]) => (
-                      <div key={category} className="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-2.5">
+                      <div key={category} className="p-4 rounded-2xl glass-subcard space-y-2.5">
                         <h3 className="text-xs font-normal text-zinc-400 uppercase tracking-wider">
                           {category}
                         </h3>
@@ -536,7 +536,7 @@ export default function StudentProfileWorkspace({
                   {student.projects.map((proj) => (
                     <div
                       key={proj.id}
-                      className="p-6 rounded-2xl bg-black/60 border border-white/10 flex flex-col justify-between space-y-4 hover:border-white/30 transition-all group"
+                      className="p-6 rounded-2xl glass-subcard flex flex-col justify-between space-y-4 hover:border-white/30 transition-all group"
                     >
                       <div className="space-y-2.5">
                         <h3 className="text-base font-medium text-white group-hover:text-zinc-200 transition">

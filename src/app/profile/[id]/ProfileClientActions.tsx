@@ -93,7 +93,7 @@ export default function ProfileClientActions({
             whileHover={{ scale: 1.05, y: -2 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setContactOpen(true)}
-            className="inline-flex items-center gap-2 px-4.5 py-2.5 rounded-2xl border border-white/15 bg-zinc-950 hover:bg-zinc-900 text-zinc-100 text-sm font-normal shadow-md transition cursor-pointer"
+            className="inline-flex items-center gap-2 px-4.5 py-2.5 rounded-2xl border border-white/20 bg-white/[0.05] hover:bg-white/[0.1] backdrop-blur-md text-zinc-100 text-sm font-normal shadow-md transition cursor-pointer"
           >
             <Mail className="w-4 h-4 text-zinc-300" />
             <span>Contact via Email</span>
@@ -106,7 +106,7 @@ export default function ProfileClientActions({
         {contactOpen && institutionalEmail && (
           <div
             onClick={() => setContactOpen(false)}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
           >
             <motion.div
               onClick={(e) => e.stopPropagation()}
@@ -114,9 +114,9 @@ export default function ProfileClientActions({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.94, y: 16 }}
               transition={{ type: 'spring', stiffness: 350, damping: 26 }}
-              className="bg-zinc-950 rounded-3xl w-full max-w-lg overflow-hidden border border-white/15 shadow-2xl"
+              className="glass-modal rounded-3xl w-full max-w-lg overflow-hidden"
             >
-              <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-black">
+              <div className="px-6 py-4 border-b border-white/15 flex items-center justify-between bg-white/[0.04]">
                 <div className="flex items-center gap-2.5 min-w-0">
                   <Mail className="w-4.5 h-4.5 text-sky-400 shrink-0" />
                   <h3 className="text-base font-medium text-white truncate">

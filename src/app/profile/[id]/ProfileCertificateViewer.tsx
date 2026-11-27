@@ -25,7 +25,7 @@ export default function ProfileCertificateViewer({ certificates }: Props) {
           <motion.div
             key={cert.id}
             whileHover={{ y: -4, scale: 1.02 }}
-            className="p-5 rounded-2xl bg-black/60 border border-white/12 flex flex-col justify-between space-y-4 hover:border-white/35 hover:shadow-lg hover:shadow-white/5 transition-all group"
+            className="p-5 rounded-2xl glass-subcard flex flex-col justify-between space-y-4 hover:border-white/35 hover:shadow-lg hover:shadow-white/5 transition-all group"
           >
             <div className="space-y-2">
               <div className="flex items-start justify-between gap-2">
@@ -86,10 +86,10 @@ export default function ProfileCertificateViewer({ certificates }: Props) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.92, y: 20 }}
               transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-              className="bg-zinc-950 rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-white/15"
+              className="glass-modal rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden"
             >
               {/* Modal Header */}
-              <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-black">
+              <div className="px-6 py-4 border-b border-white/15 flex items-center justify-between bg-white/[0.04]">
                 <div className="flex items-center gap-2.5">
                   <Award className="w-5 h-5 text-zinc-200" />
                   <h3 className="font-medium text-white text-sm sm:text-base truncate max-w-lg">

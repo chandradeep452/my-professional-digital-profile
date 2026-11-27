@@ -41,7 +41,7 @@ export default function NavbarClient({ initialUser }: NavbarClientProps) {
   const studentLabel = initialUser?.role === 'student' ? 'Edit Profile' : 'Student Portal';
 
   return (
-    <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10 shadow-lg shadow-black/70">
+    <header className="sticky top-0 z-50 bg-black/35 backdrop-blur-2xl border-b border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.45)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
         {/* Brand Logo with Motion */}
         <Link href="/" className="flex items-center gap-3.5 group min-w-0">

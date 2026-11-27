@@ -23,9 +23,9 @@ export default function PhotoLightboxModal({ photo, onClose }: PhotoLightboxModa
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 16 }}
             transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-            className="bg-zinc-950 rounded-3xl w-full max-w-xl overflow-hidden border border-white/15 shadow-2xl"
+            className="glass-modal rounded-3xl w-full max-w-xl overflow-hidden"
           >
-            <div className="px-5 py-3.5 border-b border-white/10 flex items-center justify-between bg-black">
+            <div className="px-5 py-3.5 border-b border-white/15 flex items-center justify-between bg-white/[0.04]">
               <div className="min-w-0">
                 <p className="text-sm font-medium text-white truncate">{photo.name}</p>
                 {photo.subtitle && (

@@ -66,10 +66,10 @@ export default function CustomSelect({
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className={`w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl text-sm font-normal transition-all duration-300 cursor-pointer border shadow-sm ${
+        className={`w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl text-sm font-normal transition-all duration-300 cursor-pointer border backdrop-blur-md shadow-sm ${
           isOpen
-            ? 'bg-zinc-900 text-white border-white/35 shadow-md shadow-white/10'
-            : 'bg-zinc-950/95 text-zinc-100 border-white/15 hover:bg-zinc-900'
+            ? 'bg-white/[0.1] text-white border-white/35 shadow-md shadow-white/10'
+            : 'bg-white/[0.045] text-zinc-100 border-white/15 hover:bg-white/[0.08]'
         }`}
       >
         <span className="truncate">{selectedOption?.label ?? 'Select'}</span>
@@ -93,7 +93,7 @@ export default function CustomSelect({
             : 'opacity-0 -translate-y-3 pointer-events-none'
         }`}
       >
-        <div className="rounded-xl p-1.5 bg-zinc-950/95 backdrop-blur-xl border border-white/15 shadow-2xl shadow-black/95 flex flex-col gap-0.5 max-h-60 overflow-y-auto sky-scrollbar">
+        <div className="rounded-xl p-1.5 bg-[#0a0c12]/80 backdrop-blur-2xl border border-white/20 shadow-2xl shadow-black/95 flex flex-col gap-0.5 max-h-60 overflow-y-auto sky-scrollbar">
           {options.map((opt) => {
             const isSelected = opt.value === value;
             if (isSelected) return null;
