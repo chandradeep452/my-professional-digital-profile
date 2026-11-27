@@ -30,11 +30,12 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`dark ${openSans.variable}`}>
-      <body className={`${openSans.className} min-h-screen flex flex-col bg-black text-zinc-100 font-normal antialiased selection:bg-white/20 selection:text-white relative`}>
+      <body className={`${openSans.className} min-h-screen flex flex-col text-zinc-100 font-normal antialiased selection:bg-white/20 selection:text-white relative`}>
         {/* Interactive Antigravity Cursor-Following Particle Field */}
         <AntigravityFieldBackground />
         <div className="ambient-glow-1" />
         <div className="ambient-glow-2" />
+        <div className="ambient-glow-3" />
 
         {/* Global Animated Glass Navbar */}
         <NavbarClient initialUser={sessionUser} />
@@ -45,7 +46,7 @@ export default async function RootLayout({
         </main>
 
         {/* Global Footer */}
-        <footer className="relative z-10 border-t border-white/15 bg-black/35 backdrop-blur-xl py-8 mt-16">
+        <footer className="relative z-10 border-t border-white/15 bg-[#090a14]/45 backdrop-blur-xl py-8 mt-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center text-center">
             <p className="text-xs text-zinc-400">
               &copy; {new Date().getFullYear()} Professional Digital Profile. Crafted for top campus talent and recruiters.

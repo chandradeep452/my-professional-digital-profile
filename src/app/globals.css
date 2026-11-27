@@ -2,7 +2,15 @@
 
 @layer base {
   body {
-    background-color: #000000;
+    background-color: #090a14;
+    background-image:
+      radial-gradient(circle at 12% 16%, rgba(59, 130, 246, 0.24) 0%, transparent 42%),
+      radial-gradient(circle at 42% 8%, rgba(99, 102, 241, 0.2) 0%, transparent 44%),
+      radial-gradient(circle at 68% 28%, rgba(168, 85, 247, 0.22) 0%, transparent 46%),
+      radial-gradient(circle at 88% 72%, rgba(239, 68, 68, 0.17) 0%, transparent 44%),
+      radial-gradient(circle at 22% 86%, rgba(245, 158, 11, 0.16) 0%, transparent 44%),
+      linear-gradient(135deg, #090c18 0%, #0d0a1c 48%, #140b13 100%);
+    background-attachment: fixed;
     color: #f4f4f5;
     font-family: var(--font-open-sans), 'Open Sans', Arial, Helvetica, sans-serif;
     font-weight: 400;
@@ -122,16 +130,16 @@
   transform: scale(1.02);
 }
 
-/* Subtle Silver Ambient Glows */
+/* Portal Spectrum Ambient Glows (#3b82f6 -> #6366f1 -> #a855f7 -> #ef4444 -> #f59e0b) */
 .ambient-glow-1 {
   position: fixed;
   top: -12%;
-  left: 18%;
-  width: 520px;
-  height: 520px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
+  left: 10%;
+  width: 560px;
+  height: 560px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.22) 0%, rgba(99, 102, 241, 0.12) 45%, rgba(59, 130, 246, 0) 75%);
   border-radius: 50%;
-  filter: blur(80px);
+  filter: blur(85px);
   pointer-events: none;
   z-index: 0;
   animation: pulseGlow 8s ease-in-out infinite;
@@ -139,16 +147,30 @@
 
 .ambient-glow-2 {
   position: fixed;
-  bottom: 8%;
-  right: 14%;
-  width: 580px;
-  height: 580px;
-  background: radial-gradient(circle, rgba(212, 212, 216, 0.04) 0%, rgba(212, 212, 216, 0) 70%);
+  top: 22%;
+  right: 8%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, rgba(239, 68, 68, 0.1) 50%, rgba(168, 85, 247, 0) 75%);
   border-radius: 50%;
-  filter: blur(90px);
+  filter: blur(95px);
   pointer-events: none;
   z-index: 0;
   animation: pulseGlow 10s ease-in-out infinite alternate;
+}
+
+.ambient-glow-3 {
+  position: fixed;
+  bottom: -10%;
+  left: 34%;
+  width: 580px;
+  height: 580px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.14) 0%, rgba(239, 68, 68, 0.1) 45%, rgba(245, 158, 11, 0) 75%);
+  border-radius: 50%;
+  filter: blur(95px);
+  pointer-events: none;
+  z-index: 0;
+  animation: pulseGlow 11s ease-in-out infinite;
 }
 
 /* Custom Smooth Smoked-Obsidian Scrollbar for Dropdowns */
